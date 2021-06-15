@@ -1,70 +1,43 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-const generateHTML = (answers) =>
-`<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <title>Professional README.md</title>
-</head>
-<body>
-    <header>
-        <h1># ${answers.title} </h1>
-    </header>
-    <main>
-        <div>
-        <p>## Table of Contents</p>
-        <ul>
-            <li><a href="#">Description</a></li>
-            <li><a href="#">Installation</a></li>
-            <li><a href="#">Usage</a></li>
-            <li><a href="#">License</a></li>
-            <li><a href="#">Contributing</a></li>
-            <li><a href="#">Usage</a></li>
-            <li><a href="#">Questions</a></li>
-        </ul>
-        </div>
-        <div>
-            <p>## Description</p>
-            <p>${answers.description}</p>
-        </div>
-        <div>
-            <p>## Installation</p>
-            <p>${answers.installation}</p>
-        </div>
-        <div>
-            <p>## Usage</p>
-            <p>${answers.usage}</p>
-        </div>
-        <div>
-            <p>## License</p>
-            <p>${answers.license}</p>
-        </div>
-        <div>
-            <p>## Contributing</p>
-            <p>${answers.contributing}</p>
-        </div>
-        <div>
-            <p>## Tests</p>
-            <p>${answers.tests}</p>
-        </div>
-        <div>
-        <p>## Questions</p>
-        <p> If you have any questions about my project you can contact me using the following!</p>
-        <ul>
-            <li><a href="https://github.com/${answers.github}" target="blank">github</a></li>
-            <li>${answers.email}</li>
-        </ul>
-        </div>
-    </main>
-</body>
-</html>`;
+// Sample README.md inputs
+const generateREADME = (answers) =>
+`# ${answers.title}
 
+## Table of Contents
+
+- [Description](#description)
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Contributing](#contributing)
+- [tests](#tests)
+- [Questions](#questions)
+
+## Description
+${answers.description}
+
+## Installation
+${answers.installation}
+
+## Usage 
+${answers.usage}
+
+## License
+My project uses the ${answers.license}
+
+## Contributing
+${answers.contributing}
+
+## Tests
+${answers.tests}
+
+## Questions
+If you have any questions about my project, visit my [GitHub](https://github.com/${answers.github}) 
+or email me using: ${answers.email}`;
+
+// Prompts that will be asked
 inquirer
 .prompt([
     {
@@ -88,9 +61,15 @@ inquirer
         message: 'How will a user USE your project?',
     },
     {
-        type: 'input',
+        type: 'checkbox',
         name: 'license',
         message: 'What is the license used for your project?',
+        choices: [
+            'MIT License',
+            'Apache License 2.0',
+            'Mozilla Public License 2.0',
+            'Boost Aoftware License 1.0',
+        ],
     },
     {
         type: 'input',
@@ -114,10 +93,11 @@ inquirer
     },
 
 ])
+// function using .writeFile to create README.md file
 .then((answers) => {
-    const htmlPageContent = generateHTML(answers);
+    const pageContent = generateREADME(answers);
 
-    fs.writeFile('index.html', htmlPageContent, (err) =>
+    fs.writeFile('README.md', pageContent, (err) =>
         err ? console.log(err) : console.log('Successfully created professional README.md page!')
     );
 });
